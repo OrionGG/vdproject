@@ -1,0 +1,38 @@
+function y = create_kalman_observation(positions, object_sizes, varargin)
+% y = create_kalman_observation(positions, object_sizes), or
+% y = create_kalman_observation(positions, object_sizes, previous_states)
+
+% Genera una nueva medida utilizando la información de la silueta como su
+% posición (positions) o tamaño (object_sizes).
+
+% Si se encuentra disponible la medida empleada en el instante anterior,
+% ésta puede utilizarse para calcular variables en la medida como la
+% velocidad
+
+global KALMAN_STATE_TYPE KALMAN_STATE_SIZE;
+
+% Se comprueba si se dispone de la medida en el instante anterior
+if(length(varargin) > 0)
+  HAVE_PREVIOUS_STATES = 1;
+  previous_states = varargin{1};
+else
+  HAVE_PREVIOUS_STATES = 0;
+end
+
+nobservations = size(positions, 2);
+
+% Create output matrix, some entries may remain set at zero
+y = zeros(KALMAN_STATE_SIZE, nobservations);
+
+% The first two state entries are the positions, regardless of what
+% representation was chosen. 
+y(1:2, :) = positions;
+
+% If required by the state and available, fill in velocity information
+if(HAVE_PREVIOUS_STATES == 1)
+    y(3:4, :) = positions - repmat(previous_states(1:2), 1, size(positions, 2)); 
+end
+
+y(5, :) = object_sizes;
+
+
