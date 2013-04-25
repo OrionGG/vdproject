@@ -5,7 +5,7 @@ N = size(xk,2);
 [HEIGHT WIDTH C]= size(ball_frame);
 
 l = 1;
-
+wkidx= 0; 
 for k = 1:N
     acumValues = 0;
     x0 = round(xk(1,k) - particleSize./2);
