@@ -1,4 +1,4 @@
-function [ output_args ] = PSO( input_args )
+function PSO( N, particlesSize )
 %PSO Summary of this function goes here
 %   Detailed explanation goes here
 files = dir(['./SecuenciaPF/kk/' '*.' 'jpeg']);
@@ -11,6 +11,11 @@ actual_frame = imread (strcat('./SecuenciaPF/kk/',frames_names{1}));
 t = 1;
 
 xk = throwParticles(N, HEIGHT, WIDTH );
+vk = zeros(2,N);
+xBest = zeros(1,N);
+xBestPosition.Value = 0;
+xBestPosition.x = 0;
+xBestPosition.y = 0;
 
 for tt = 1:num_frames
  
@@ -20,28 +25,27 @@ for tt = 1:num_frames
   ball_frame = im2bw(ball_frame, 175./255);
      
 
-   drawRectangles(xk, particlesSize, actual_frame, 'g');
+  drawRectangles(xk, particlesSize, actual_frame, 'g');
   [wk, wkidx] = evaluacion(xk, particlesSize, ball_frame);
   if (wkidx ~= 0)
-    sumwk = sum(wk);
-    wk = wk/sumwk;
+    xBest = update(wk, xBest);
+  end;
   
+   Idx = getBestPosition(xBest, N);
+    
+    if(xBestPosition.Value < xBest(Idx))
+        xBestPosition.x = xk(1, Idx);
+        xBestPosition.y = xk(2, Idx);
+        xBestPosition.Value = xBest(Idx);
+    end
+    
     xt = estimacion(xk, wkidx);
     x(1,tt) = xt(1, maxIdx);
     x(2,tt) = xt(2, maxIdx);
     drawRectangles(x(:,tt), particlesSize, actual_frame, 'b');
   
-  
-    [xk, wk] = seleccion(xk, wk);
-  
-    xk = disfusion(xk, withDifusion, ball_frame);
-  
-    xk = prediction( x, tt, xk );
-    
-  else
-      
-    xk = throwParticles(N, HEIGHT, WIDTH );
-  end;
+    vk = updateVelocity(vk);
+    xk = moveParticles(xk, vk);
   
    drawRectangles(xk, particlesSize, actual_frame, 'g');
 
