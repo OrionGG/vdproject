@@ -7,7 +7,6 @@ N = size(xk,2);
 l = 1;
 wkidx= 0; 
 maxValue = 0;
-maxIdx = 0;
 for k = 1:N
     acumValues = 0;
     x0 = round(xk(1,k) - particleSize./2);
@@ -30,12 +29,7 @@ for k = 1:N
     
     wk(k) = acumValues;
     if (wk(k)> 0)
-        wkidx(l) = k;
-        if(acumValues > maxValue)
-            maxIdx = l;
-            maxValue = acumValues;
-        end
-        
+        wkidx(l) = k;        
         l = l+1;
     end 
 end
