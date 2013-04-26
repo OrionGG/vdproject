@@ -24,19 +24,23 @@ for tt = 1:num_frames
   imshow(ball_frame);
 
    drawRectangles(xk, particlesSize, actual_frame, 'g');
-  [wk, wkidx] = evaluacion(xk, particlesSize, ball_frame);
+  [wk, wkidx, maxIdx] = evaluacion(xk, particlesSize, ball_frame);
   if (wkidx ~= 0)
     sumwk = sum(wk);
     wk = wk/sumwk;
   
-    x = estimacion(xk, wkidx);
-    drawRectangles(x, particlesSize, actual_frame, 'b');
+    xt = estimacion(xk, wkidx);
+    x(1,tt) = xt(1, maxIdx);
+    x(2,tt) = xt(2, maxIdx);
+    drawRectangles(x(:,tt), particlesSize, actual_frame, 'b');
   
   
     [xk, wk] = seleccion(xk, wk);
   
     xk = disfusion(xk, withDifusion, ball_frame);
   
+    xk = prediction( x, tt, xk );
+    
   else
       
     xk = throwParticles(N, HEIGHT, WIDTH );
