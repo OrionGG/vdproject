@@ -1,13 +1,13 @@
-function [ idx ] = getBestPosition( xBest, N )
+function [ idx ] = getBestPosition( xBestArray, N )
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 maxValue = 0;
 idx = 0;
 for i = 1:N
     
-    if(maxValue < xBest(i))
+    if(maxValue < xBestArray.Values(i))
        idx = i;
-       maxValue = xBest(i);
+       maxValue = xBestArray.Values(i);
     end
 end
 
