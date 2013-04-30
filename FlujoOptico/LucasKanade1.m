@@ -1,4 +1,4 @@
-function [ u, v ] = LucasKanade1bis(blockSize)
+function [ u, v ] = LucasKanade1(blockSize)
 files = dir(['./JPEGS/' '*.' 'jpg']);
 frames_names = sort({files.name});
 num_frames = size( sort({files.name}),2);
