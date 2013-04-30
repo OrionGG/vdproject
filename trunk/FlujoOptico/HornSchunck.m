@@ -1,4 +1,4 @@
-function [ u, v, diffunorm, diffvnorm ] = HornSchunk(lamda, Nit, blockSize)
+function [ u, v, diffunorm, diffvnorm ] = HornSchunck(lamda, Nit, blockSize)
 
 files = dir(['./JPEGS/' '*.' 'jpg']);
 frames_names = sort({files.name});
