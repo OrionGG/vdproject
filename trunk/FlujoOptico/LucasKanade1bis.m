@@ -1,12 +1,10 @@
-function [ u, v ] = LucasKanade2(blockSize)
-
+function [ u, v ] = LucasKanade1bis(blockSize)
 files = dir(['./JPEGS/' '*.' 'jpg']);
 frames_names = sort({files.name});
 num_frames = size( sort({files.name}),2);
 
 frame1 = imread (strcat('./JPEGS/',frames_names{1}));
 frame2 = imread (strcat('./JPEGS/',frames_names{2}));
-
 
 frame1 = double(frame1);
 frame1 = frame1/255;
@@ -38,6 +36,7 @@ frame2_ymas=[frame2(2:end,:)-frame2(1:end-1,:); zeros(1,n)]/hy;
         
 Ix = (frame1_xmas/2)+(frame2_xmas/2);
 Iy = (frame1_ymas/2)+(frame2_ymas/2);
+
 x = [];
 y = [];
 u = [];
@@ -63,25 +62,19 @@ v = [];
             subIxsubIy = subIx .* subIy;
             subIxsubIt = subIx .* subIt;
             subIysubIt = subIy .* subIt;
-            sumsubIx2 = sum(subIx2(:));
-            sumsubIy2 = sum(subIy2(:));
-            sumsubIxsubIy = sum(subIxsubIy(:));
-            sumsubIxsubIt = sum(subIxsubIt(:));
-            sumsubIysubIt = sum(subIysubIt(:));
             
             
-            unum =(-(sumsubIy2 .* sumsubIxsubIt))+(sumsubIxsubIy .* sumsubIysubIt);
-            uden = (sumsubIx2 .* sumsubIy2)-(sumsubIxsubIy .* sumsubIxsubIy);
-            vnum =(sumsubIxsubIy .* sumsubIxsubIt)-(sumsubIx2 .* sumsubIysubIt);
-            vden = (sumsubIx2 .* sumsubIy2)-(sumsubIxsubIy .* sumsubIxsubIy);
-            
-            uvalue = unum./uden;
-            vvalue = vnum./vden;
+            spacialGrad = pinv([sum(subIx2(:)), sum(subIxsubIy(:)); sum(subIxsubIy(:)), sum(subIy2(:))]);
+            temporalContr = [-sum(subIxsubIt(:));-sum(subIysubIt(:))];
 
-            u = [u uvalue];
-            v = [v vvalue];
+            uv = spacialGrad * temporalContr;
+            
+            
+            u = [u uv(1)];
+            v = [v uv(2)];
             y = [y, startRow + middle];
             x = [x, startCol + middle];
+            
         end;
         
     end;
@@ -90,12 +83,10 @@ v = [];
     figure();
     imshow(frame1);
     hold on;
+    
     u(isnan(u)) = 0;
     v(isnan(v)) = 0;
-    u(isinf(u)) = 100;
-    v(isinf(v)) = 100;
-    quiver(x, y, u, v, blockSize, 'color', 'g', 'linewidth', 2);
-    %set(gca,'YDir','reverse');
+    quiver(x, y, u, v, middle, 'color', 'g', 'linewidth', 2);
 
 end
 

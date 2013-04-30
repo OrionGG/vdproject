@@ -99,7 +99,6 @@ end;
     vAvg(isnan(vAvg)) = 0;
     %quiver(uAvg, vAvg, middle, 'color', 'g', 'linewidth', 2);
     quiver(y, x, uAvg, vAvg, middle, 'color', 'g', 'linewidth', 2);
-    set(gca,'YDir','reverse');
 
 end
 
