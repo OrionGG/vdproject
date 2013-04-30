@@ -1,4 +1,11 @@
-function [ u, v, diffunorm, diffvnorm ] = HornSchunk( frame1, frame2, lamda, Nit, blockSize)
+function [ u, v, diffunorm, diffvnorm ] = HornSchunk(lamda, Nit, blockSize)
+
+files = dir(['./JPEGS/' '*.' 'jpg']);
+frames_names = sort({files.name});
+num_frames = size( sort({files.name}),2);
+
+frame1 = imread (strcat('./JPEGS/',frames_names{1}));
+frame2 = imread (strcat('./JPEGS/',frames_names{2}));
 
 frame1 = double(frame1);
 frame1 = frame1/255;
