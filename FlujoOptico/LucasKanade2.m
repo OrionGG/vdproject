@@ -45,7 +45,10 @@ v = [];
 
     middle = floor(blockSize/2) ;
     maxRowBlock = (m/blockSize);
+    t = zeros(1,maxRowBlock);
     for i=1:maxRowBlock
+        
+        tic;
         startRow = ((i-1) * blockSize) + 1;
         endRow = min(startRow + blockSize - 1, n);
         
@@ -84,10 +87,11 @@ v = [];
             x = [x, startCol + middle];
         end;
         
+        t(i) = toc; 
     end;
 
 
-    figure();
+    figure(1);
     imshow(frame1);
     hold on;
     u(isnan(u)) = 0;
@@ -97,5 +101,10 @@ v = [];
     quiver(x, y, u, v, blockSize, 'color', 'g', 'linewidth', 2);
     %set(gca,'YDir','reverse');
 
+    
+    figure(2);
+    plot(t);
+    
+    a = sum(t);
 end
 
